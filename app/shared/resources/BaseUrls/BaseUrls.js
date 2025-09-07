@@ -1,5 +1,7 @@
 export const poeFetchAPI = "https://www.pathofexile.com/api/trade/fetch";
+export const poeHideoutAPI = "https://www.pathofexile.com/api/trade/whisper";
 export const poe2FetchAPI = "https://www.pathofexile.com/api/trade2/fetch";
+export const poe2HideoutAPI = "https://www.pathofexile.com/api/trade2/whisper";
 
 export const poeWsUri = "wss://www.pathofexile.com/api/trade/live";
 export const poe2WsUri = "wss://www.pathofexile.com/api/trade2/live/poe2";

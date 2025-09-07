@@ -8,7 +8,11 @@ import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
 import { windows } from "../../shared/resources/Windows/Windows";
 import * as electronUtils from "../utils/electron-utils/electron-utils";
 import * as storeUtils from "../../shared/utils/StoreUtils/StoreUtils";
-import { devErrorLog } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+import {
+  isDefined,
+  devErrorLog,
+  devLog,
+} from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 
 const updateResults = args => {
   const globalStore = GlobalStore.getInstance();
@@ -50,7 +54,19 @@ const processItems = (itemIds, ws, game) => {
     .then(itemsDetails => {
       itemsDetails.forEach(itemDetails => {
         const id = uniqueIdGenerator();
-        const whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+        const hideoutToken = poeTrade.getHideoutToken(itemDetails);
+        let whisperMessage = "No Token Found";
+        let hideoutResponse = null
+
+        if (isDefined(hideoutToken)) {
+          // devLog(`HideOut - ${hideoutToken}`)          
+          hideoutResponse = poeTrade.goToHideout(hideoutToken, game);  
+          whisperMessage = poeTrade.getHideoutMessage(itemDetails);
+          // devLog(`OUTPUT ITEM -- ${itemDetails}`)
+        } else {
+          whisperMessage = poeTrade.getWhisperMessage(itemDetails);
+        }
+        // devLog(`After Hideout`)   
         const price = poeTrade.getPrice(itemDetails);
 
         updateResults({

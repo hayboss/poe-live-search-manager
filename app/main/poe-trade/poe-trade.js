@@ -1,4 +1,4 @@
-import { itemDetails } from "../api/api";
+import { itemDetails, postToHideout } from "../api/api";
 import {
   safeGet,
   safeJsonResponse,
@@ -70,6 +70,35 @@ export const getWhisperMessage = itemDetailsResponse => {
   }
 
   return whisperMessage;
+};
+
+export const getHideoutMessage = itemDetailsResponse => {
+  const itemName = safeGet(itemDetailsResponse, ["item", "name"]);
+  const baseType = safeGet(itemDetailsResponse, ["item", "baseType"]);
+  const hideoutMessage = `${itemName} ${baseType}`
+
+  if (!isDefined(hideoutMessage)) {
+    return "";
+  }
+
+  return hideoutMessage;
+};
+
+export const getHideoutToken = itemDetailsResponse => {
+  const hideoutToken = safeGet(itemDetailsResponse, [
+    "listing",
+    "hideout_token",
+  ]);
+
+  if (!isDefined(hideoutToken)) {
+    return "";
+  }
+
+  return hideoutToken;
+};
+
+export const goToHideout = (hideoutToken, game) => {
+  return postToHideout(hideoutToken, game);
 };
 
 export const getPrice = itemDetailsResponse => {

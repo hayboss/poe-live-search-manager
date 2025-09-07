@@ -4,12 +4,14 @@ import * as baseUrls from "../../shared/resources/BaseUrls/BaseUrls";
 import { envIs } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
 import GlobalStore from "../../shared/GlobalStore/GlobalStore";
 import { storeKeys } from "../../shared/resources/StoreKeys/StoreKeys";
+import { devLog } from "../../shared/utils/JavaScriptUtils/JavaScriptUtils";
+
 
 const userAgent = () => {
   const dummyDevUserAgent = `only-used-for-development, ${process.env.EMAIL}`;
   return envIs("development")
     ? dummyDevUserAgent
-    : `PoE Live Search Manager/${process.env.REVISION}, ${process.env.EMAIL}`;
+    : `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0`;
 };
 
 const cookieHeader = () => {
@@ -25,6 +27,7 @@ const apiHeaders = () => {
     "Content-Type": "application/json",
     Cookie: cookieHeader(),
     "User-Agent": userAgent(),
+    "X-Requested-With": "XMLHttpRequest",
   };
 };
 
@@ -36,6 +39,23 @@ export const itemDetails = (ids, game) => {
 
   return fetch(itemUrl, {
     headers: apiHeaders(),
+  });
+};
+
+export const postToHideout = (hideoutToken, game) => {
+  const hideoutUrl =
+    game === "poe2"
+      ? `${baseUrls.poe2HideoutAPI}`
+      : `${baseUrls.poeHideoutAPI}`;
+
+  const data = JSON.stringify({
+    token: hideoutToken,
+  });
+
+  return fetch(hideoutUrl, {
+    method: "POST",
+    headers: apiHeaders(),
+    body: data,
   });
 };
 
